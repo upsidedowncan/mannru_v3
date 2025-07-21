@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section" id="admin-content" style="display: none;">
+            <h2>Панель администратора</h2>
+            <p>Добро пожаловать, администратор!</p>
+
+            <section class="ui-section">
+                <h3>Пользователи</h3>
+                <div id="users-list"></div>
+            </section>
+        </section>
+
+        <section id="auth-gate">
+            <p>Для доступа к этой странице необходимо войти в систему как администратор.</p>
+        </section>
+
+        <!-- Dialog for sending message -->
+        <div id="message-dialog" class="dialog-overlay" style="display: none;">
+            <div class="dialog">
+                <div class="dialog-header">
+                    <h3 class="dialog-title">Отправить сообщение пользователю</h3>
+                </div>
+                <div class="dialog-content">
+                    <textarea id="message-text" class="input" rows="4" placeholder="Введите ваше сообщение..."></textarea>
+                </div>
+                <div class="dialog-footer">
+                    <button id="send-message-button" class="btn btn-primary">Отправить</button>
+                    <button id="cancel-message-button" class="btn">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="debt-reminder.js"></script>
+    <script type="module" src="admin.js"></script>
+</body>
+</html> 

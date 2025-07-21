@@ -1,6 +1,8 @@
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const auth = getAuth();
+const firestore = getFirestore();
 const form = document.querySelector('form');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
@@ -62,7 +64,16 @@ registerButton.addEventListener('click', async (e) => {
     const password = passwordInput.value;
 
     try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Save user to Firestore
+        await setDoc(doc(firestore, "users", user.uid), {
+            uid: user.uid,
+            email: user.email,
+            createdAt: new Date()
+        });
+
         window.location.href = '/';
     } catch (error) {
         console.error('Error creating user:', error);

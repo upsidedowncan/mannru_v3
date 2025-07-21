@@ -37,6 +37,10 @@ const checkDebt = async (user) => {
     }
 };
 
+window.checkDebt = checkDebt;
+
 onAuthStateChanged(auth, (user) => {
-    checkDebt(user);
+    if (user) {
+        checkDebt(user);
+    }
 }); 

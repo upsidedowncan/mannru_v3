@@ -10,6 +10,7 @@ const navbarHTML = `
         <li class="nav-item"><a href="/market.html" class="nav-link">Маркет</a></li>
         <li class="nav-item"><a href="/my-items.html" class="nav-link">Мои товары</a></li>
         <li class="nav-item"><a href="/my-chats.html" class="nav-link">Мои чаты</a></li>
+        <li class="nav-item" id="admin-link" style="display: none;"><a href="/admin.html" class="nav-link">Админ</a></li>
         <li class="nav-item"><a href="/auth/auth.html" id="auth-button" class="nav-link">Войти</a></li>
         <li class="nav-item" id="logout-button" style="display: none;"><a href="#" class="nav-link">Выйти</a></li>
     </ul>

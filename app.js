@@ -8,19 +8,27 @@ console.log('Firestore service:', firestore);
 document.addEventListener('DOMContentLoaded', () => {
     const authButton = document.getElementById('auth-button');
     const logoutButton = document.getElementById('logout-button');
+    const adminLink = document.getElementById('admin-link');
+    const ADMIN_EMAIL = 'utoplennik69pc@gmail.com';
 
     if (authButton && logoutButton) {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in
                 authButton.textContent = 'Панель управления';
                 authButton.href = '/dashboard.html';
                 logoutButton.style.display = 'block';
+
+                if (user.email === ADMIN_EMAIL) {
+                    adminLink.style.display = 'block';
+                } else {
+                    adminLink.style.display = 'none';
+                }
+
             } else {
-                // User is signed out
                 authButton.textContent = 'Войти';
                 authButton.href = '/auth/auth.html';
                 logoutButton.style.display = 'none';
+                adminLink.style.display = 'none';
             }
         });
 
