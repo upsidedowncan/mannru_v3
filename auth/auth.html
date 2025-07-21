@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Войти в аккаунт</title>
+    <link rel="stylesheet" href="../ui-kit.css">
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <h2>Войти в аккаунт</h2>
+            <form>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="input" placeholder="Введите email">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" id="password" class="input" placeholder="Введите пароль">
+                </div>
+                <button type="submit" id="login-button" class="btn btn-primary">Войти</button>
+                <button type="button" id="register-button" class="btn btn-secondary">Регистрация</button>
+            </form>
+        </section>
+    </main>
+
+    <div id="error-dialog" class="dialog-overlay">
+        <div class="dialog">
+            <div class="dialog-header">
+                <h3 id="dialog-title" class="dialog-title">Ошибка</h3>
+            </div>
+            <div class="dialog-content">
+                <p id="dialog-message"></p>
+            </div>
+            <div class="dialog-footer">
+                <button id="dialog-close-button" class="btn btn-primary">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../components/navbar.js"></script>
+    <script type="module" src="../firebase.js"></script>
+    <script type="module" src="../app.js"></script>
+    <script type="module" src="auth.js"></script>
+</body>
+</html>
