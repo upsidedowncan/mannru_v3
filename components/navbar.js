@@ -1,6 +1,7 @@
 const navbarHTML = `
 <nav class="navbar">
     <a href="/" class="navbar-brand">Банк Маннру</a>
+    <div id="debt-reminder" class="debt-reminder" style="display: none;"></div>
     <button class="navbar-toggler" id="navbarToggler">
         <span class="navbar-toggler-icon"></span>
     </button>
