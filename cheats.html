@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница читов - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <link rel="stylesheet" href="css/gradient.css">
+    <style>
+        .cheat-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #f9f9f9;
+        }
+        .cheat-card-info {
+            margin-bottom: 1rem;
+        }
+        .cheat-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <h2>Страница читов</h2>
+            <p>Здесь вы можете управлять картами и балансом.</p>
+        </section>
+
+        <section class="ui-section">
+            <h3>Ваши карты</h3>
+            <div id="cards-management-container">
+                <p>Загрузка карт...</p>
+            </div>
+        </section>
+
+        <section class="ui-section">
+            <h3>Создать новую карту</h3>
+            <div class="form-group">
+                <label for="new-card-balance" class="form-label">Начальный баланс</label>
+                <input type="number" id="new-card-balance" class="input" placeholder="Например, 5000" value="1000">
+            </div>
+            <button id="create-new-card-button" class="btn btn-primary">Создать карту</button>
+        </section>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="debt-reminder.js"></script>
+    <script type="module" src="cheats.js"></script>
+</body>
+</html> 
