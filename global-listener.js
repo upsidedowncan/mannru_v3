@@ -1,10 +1,26 @@
 import { auth, firestore } from './firebase.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { doc, onSnapshot, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
         if (user) {
+            try {
+                const userDocRef = doc(firestore, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists() && userDoc.data().disabled) {
+                    console.log("User is disabled, signing out.");
+                    await signOut(auth);
+                    // Optional: Redirect to a specific page after sign-out
+                    // window.location.href = '/disabled.html';
+                    return; // Stop further processing for disabled user
+                }
+            } catch (error) {
+                console.error("Error checking user disabled status:", error);
+            }
+
+            // If user is not disabled, proceed with original functionality
             listenForAdminMessages(user.uid);
         }
     });
@@ -58,4 +74,4 @@ function showAdminMessageDialog(message, messageDocRef) {
             dialog.remove();
         }
     });
-} 
+}

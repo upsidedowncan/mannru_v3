@@ -1,5 +1,5 @@
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const auth = getAuth();
 const firestore = getFirestore();
@@ -49,7 +49,18 @@ loginButton.addEventListener('click', async (e) => {
     const password = passwordInput.value;
 
     try {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Check if user is disabled
+        const userDocRef = doc(firestore, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists() && userDoc.data().disabled) {
+            await auth.signOut(); // Sign out the user immediately
+            showErrorDialog('Ваш аккаунт отключен. Обратитесь к администратору.');
+            return;
+        }
         window.location.href = '/';
     } catch (error) {
         console.error('Error signing in:', error);
@@ -71,7 +82,8 @@ registerButton.addEventListener('click', async (e) => {
         await setDoc(doc(firestore, "users", user.uid), {
             uid: user.uid,
             email: user.email,
-            createdAt: new Date()
+            createdAt: new Date(),
+            disabled: false // Explicitly set disabled to false on registration
         });
 
         window.location.href = '/';
