@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои товары - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <link rel="stylesheet" href="css/gradient.css">
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Мои товары на продаже</h2>
+                <a href="/create-item.html" class="btn btn-primary">Выставить новый товар</a>
+            </div>
+            <div id="my-items-container" class="items-grid"></div>
+        </section>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="my-items.js"></script>
+</body>
+</html> 

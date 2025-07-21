@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <link rel="stylesheet" href="css/gradient.css">
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <h2>Панель управления</h2>
+            <p>Добро пожаловать, <span id="user-greeting"></span>!</p>
+            <button id="customize-account-button" class="btn">Настроить аккаунт</button>
+        </section>
+
+        <section class="ui-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Ваши карты</h2>
+                <button id="create-card-button" class="btn btn-primary">Выпустить новую карту</button>
+            </div>
+            <div id="cards-container"></div>
+        </section>
+    </main>
+
+    <div id="account-dialog" class="dialog-overlay">
+        <div class="dialog">
+            <div class="dialog-header">
+                <h3 class="dialog-title">Настройки аккаунта</h3>
+            </div>
+            <div class="dialog-content">
+                <div class="form-group">
+                    <label for="displayName" class="form-label">Ваше имя</label>
+                    <input type="text" id="displayName" class="input" placeholder="Введите ваше имя">
+                </div>
+                <button id="update-profile-button" class="btn btn-primary">Обновить</button>
+                <hr style="margin: 2rem 0;">
+                <h4>Опасная зона</h4>
+                <p>Удаление аккаунта - необратимое действие.</p>
+                <button id="delete-account-button" class="btn btn-danger">Удалить аккаунт</button>
+            </div>
+            <div class="dialog-footer">
+                <button id="dialog-close-button" class="btn">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html> 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выставить товар - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <link rel="stylesheet" href="css/gradient.css">
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <h2>Выставить новый товар</h2>
+            <form id="create-item-form">
+                <div class="form-group">
+                    <label for="itemName" class="form-label">Название товара</label>
+                    <input type="text" id="itemName" class="input" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemDescription" class="form-label">Описание</label>
+                    <textarea id="itemDescription" class="input" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice" class="form-label">Цена (МР)</label>
+                    <input type="number" id="itemPrice" class="input" required>
+                    <small>Комиссия (5%): <span id="commission-amount">0</span> МР</small>
+                </div>
+                <div class="form-group">
+                    <label for="itemImage" class="form-label">Изображение</label>
+                    <input type="file" id="itemImage" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="payout-card" class="form-label">Карта для получения средств</label>
+                    <select id="payout-card" class="input" required></select>
+                </div>
+                <button type="submit" class="btn btn-primary">Выставить товар</button>
+            </form>
+        </section>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="create-item.js"></script>
+</body>
+</html> 

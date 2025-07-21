@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация о товаре - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <link rel="stylesheet" href="css/gradient.css">
+    <style>
+        .item-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .item-details-grid img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .item-description {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <h2 id="item-name"></h2>
+            <div class="item-details-grid">
+                <div>
+                    <img id="item-image" src="" alt="Изображение товара">
+                </div>
+                <div>
+                    <h3>Цена: <span id="item-price"></span> МР</h3>
+                    <p id="item-description" class="item-description"></p>
+                    <div class="form-group">
+                        <label for="payment-card" class="form-label">Выберите карту для оплаты</label>
+                        <select id="payment-card" class="input"></select>
+                    </div>
+                    <button id="buy-now-button" class="btn btn-primary">Купить сейчас</button>
+                    <button id="contact-seller-button" class="btn">Связаться с продавцом</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="item-details.js"></script>
+</body>
+</html> 

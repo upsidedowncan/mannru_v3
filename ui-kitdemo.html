@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monospace UI Kit</title>
+    <link rel="stylesheet" href="ui-kit.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="#" class="navbar-brand">Logo</a>
+            <button class="navbar-toggler" id="navbarToggler">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <ul class="navbar-nav" id="navbarNav">
+                <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="ui-kit">
+        <h1>Monospace UI Kit</h1>
+
+        <!-- Buttons -->
+        <section class="ui-section">
+            <h2>Buttons</h2>
+            <button class="btn">Default Button</button>
+            <a href="#" class="btn btn-primary">Primary Button</a>
+
+            <br><br>
+
+            <button class="btn btn-icon">
+                <span class="icon icon-add"></span>
+                Add Item
+            </button>
+            <button class="btn btn-primary btn-icon">
+                <span class="icon icon-delete"></span>
+                Delete Item
+            </button>
+            <button class="btn btn-icon">
+                <span class="icon icon-add"></span>
+            </button>
+        </section>
+
+        <!-- Form Elements -->
+        <section class="ui-section">
+            <h2>Forms</h2>
+            <div class="form-group">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" class="input" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="input" placeholder="Enter your email">
+            </div>
+        </section>
+
+        <!-- Card -->
+        <section class="ui-section">
+            <h2>Card</h2>
+            <div class="card">
+                <h3 class="card-title">Card Title</h3>
+                <p class="card-content">This is a simple card component. It can be used to display content in a structured way.</p>
+            </div>
+        </section>
+
+        <!-- New Components -->
+        <section class="ui-section">
+            <h2>Selection Controls</h2>
+
+            <!-- Switch -->
+            <div class="form-group">
+                <label class="form-label">Feature Switch</label>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <!-- Radio Buttons -->
+            <div class="form-group">
+                <label class="form-label">Choose an option</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="option" value="1" checked>
+                        <span class="radio-custom"></span> Option 1
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="option" value="2">
+                        <span class="radio-custom"></span> Option 2
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dialog -->
+        <section class="ui-section">
+            <h2>Dialog</h2>
+            <button class="btn" id="openDialogBtn">Open Dialog</button>
+        </section>
+    </div>
+
+    <div id="dialogOverlay" class="dialog-overlay">
+        <div id="dialog" class="dialog">
+            <div class="dialog-header">
+                <h3 class="dialog-title">Dialog Title</h3>
+            </div>
+            <div class="dialog-content">
+                <p>This is the content of the dialog. You can put any HTML content here.</p>
+            </div>
+            <div class="dialog-footer">
+                <button class="btn" id="cancelDialogBtn">Cancel</button>
+                <button class="btn btn-primary" id="confirmDialogBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const openDialogBtn = document.getElementById('openDialogBtn');
+        const cancelDialogBtn = document.getElementById('cancelDialogBtn');
+        const confirmDialogBtn = document.getElementById('confirmDialogBtn');
+        const dialogOverlay = document.getElementById('dialogOverlay');
+
+        function openDialog() {
+            dialogOverlay.style.display = 'flex';
+        }
+
+        function closeDialog() {
+            dialogOverlay.style.display = 'none';
+        }
+
+        openDialogBtn.addEventListener('click', openDialog);
+        cancelDialogBtn.addEventListener('click', closeDialog);
+        confirmDialogBtn.addEventListener('click', closeDialog);
+
+        dialogOverlay.addEventListener('click', (event) => {
+            if (event.target === dialogOverlay) {
+                closeDialog();
+            }
+        });
+
+        const navbarToggler = document.getElementById('navbarToggler');
+        const navbarNav = document.getElementById('navbarNav');
+
+        navbarToggler.addEventListener('click', () => {
+            navbarNav.classList.toggle('show');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки карты - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <link rel="stylesheet" href="css/gradient.css">
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <h2>Настройки карты</h2>
+            <div id="card-details-container"></div>
+            <div class="color-picker-container" style="margin-top: 2rem;">
+                <h4>Изменить цвет карты</h4>
+                <div class="color-picker">
+                    <div class="color-box" style="background: linear-gradient(120deg, #2c3e50, #4ca1af);" data-color="linear-gradient(120deg, #2c3e50, #4ca1af)"></div>
+                    <div class="color-box" style="background: linear-gradient(120deg, #764ba2, #667eea);" data-color="linear-gradient(120deg, #764ba2, #667eea)"></div>
+                    <div class="color-box" style="background: linear-gradient(120deg, #ff7e5f, #feb47b);" data-color="linear-gradient(120deg, #ff7e5f, #feb47b)"></div>
+                    <div class="color-box" style="background: linear-gradient(120deg, #3a6186, #89253e);" data-color="linear-gradient(120deg, #3a6186, #89253e)"></div>
+                </div>
+            </div>
+            <hr style="margin: 2rem 0;">
+            <h4>Опасная зона</h4>
+            <button id="delete-card-button" class="btn btn-danger">Удалить карту</button>
+        </section>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="card-settings.js"></script>
+</body>
+</html> 
