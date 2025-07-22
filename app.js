@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const authButton = document.getElementById('auth-button');
     const logoutButton = document.getElementById('logout-button');
     const adminLink = document.getElementById('admin-link');
-    const ADMIN_EMAIL = 'utoplennik69pc@gmail.com';
+    const ADMIN_EMAILS = ['utoplennik69pc@gmail.com', 'abusalamovmuhammad9@gmail.com'];
 
     if (authButton && logoutButton) {
         onAuthStateChanged(auth, (user) => {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 authButton.href = '/dashboard.html';
                 logoutButton.style.display = 'block';
 
-                if (user.email === ADMIN_EMAIL) {
+                if (user && ADMIN_EMAILS.includes(user.email)) {
                     adminLink.style.display = 'block';
                 } else {
                     adminLink.style.display = 'none';

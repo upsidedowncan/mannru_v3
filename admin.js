@@ -2,14 +2,14 @@ import { auth, firestore } from './firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const ADMIN_EMAIL = 'utoplennik69pc@gmail.com';
+const ADMIN_EMAILS = ['utoplennik69pc@gmail.com', 'abusalamovmuhammad9@gmail.com'];
 
 document.addEventListener('DOMContentLoaded', () => {
     const adminContent = document.getElementById('admin-content');
     const authGate = document.getElementById('auth-gate');
 
     onAuthStateChanged(auth, async (user) => {
-        if (user && user.email === ADMIN_EMAIL) {
+        if (user && ADMIN_EMAILS.includes(user.email)) {
             adminContent.style.display = 'block';
             authGate.style.display = 'none';
             await loadUsers();
@@ -33,7 +33,7 @@ async function loadUsers() {
         let usersHTML = '<div class="list-group">';
         userSnapshot.forEach(doc => {
             const user = doc.data();
-            if (user.email !== ADMIN_EMAIL) {
+            if (user && user.email && !ADMIN_EMAILS.includes(user.email)) {
                 usersHTML += `
                     <div class="list-group-item">
                         <span>${user.displayName || user.email} (UID: ${user.uid}) - Статус: ${user.disabled ? 'Отключен' : 'Активен'}</span>
@@ -140,16 +140,12 @@ async function toggleDisableUser(uid, isDisabled) {
 async function deleteUser(uid) {
     if (!confirm('Вы уверены, что хотите удалить этого пользователя и все его данные? Это действие необратимо.')) return;
     try {
-        // This is a simplified deletion. In a real app, you'd use a Cloud Function
-        // to handle this properly on the backend to delete auth user and all associated data.
         await deleteDoc(doc(firestore, 'users', uid));
 
-        // Delete associated cards
         const cardsQuery = query(collection(firestore, 'cards'), where('userId', '==', uid));
         const cardsSnapshot = await getDocs(cardsQuery);
         cardsSnapshot.forEach(async (cardDoc) => await deleteDoc(cardDoc.ref));
 
-        // Delete associated items
         const itemsQuery = query(collection(firestore, 'items'), where('sellerId', '==', uid));
         const itemsSnapshot = await getDocs(itemsQuery);
         itemsSnapshot.forEach(async (itemDoc) => await deleteDoc(itemDoc.ref));
@@ -225,7 +221,6 @@ async function loadUserItems(uid) {
 }
 
 
-// Event delegation for dynamically created content in dialogs
 document.addEventListener('click', async (e) => {
     if (!e.target.dataset.action) return;
 
@@ -289,5 +284,3 @@ document.addEventListener('click', async (e) => {
         }
     }
 });
-
-
