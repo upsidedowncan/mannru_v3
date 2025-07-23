@@ -1,6 +1,8 @@
 import { auth, firestore } from './firebase.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, onSnapshot, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { doc, onSnapshot, deleteDoc, getDoc, collection, query, where, orderBy, limit, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getDatabase, ref, onValue, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { showNotification } from './notifications.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     onAuthStateChanged(auth, async (user) => {
@@ -22,9 +24,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // If user is not disabled, proceed with original functionality
             listenForAdminMessages(user.uid);
+            updateUserStatus(user.uid);
         }
     });
 });
+
+function updateUserStatus(uid) {
+    const db = getDatabase();
+    const userStatusDatabaseRef = ref(db, '/status/' + uid);
+    const userStatusFirestoreRef = doc(firestore, '/status/' + uid);
+
+    const isOfflineForDatabase = {
+        state: 'offline',
+        last_changed: serverTimestamp(),
+    };
+
+    const isOnlineForDatabase = {
+        state: 'online',
+        last_changed: serverTimestamp(),
+    };
+
+    const isOfflineForFirestore = {
+        state: 'offline',
+        last_changed: serverTimestamp(),
+    };
+
+    const isOnlineForFirestore = {
+        state: 'online',
+        last_changed: serverTimestamp(),
+    };
+
+    onValue(ref(db, '.info/connected'), (snapshot) => {
+        if (snapshot.val() === false) {
+            setDoc(userStatusFirestoreRef, isOfflineForFirestore);
+            return;
+        }
+
+        onDisconnect(userStatusDatabaseRef).set(isOfflineForDatabase).then(() => {
+            set(userStatusDatabaseRef, isOnlineForDatabase);
+            setDoc(userStatusFirestoreRef, isOnlineForFirestore);
+        });
+    });
+}
 
 function listenForAdminMessages(uid) {
     const messageDocRef = doc(firestore, "messages", uid);
@@ -75,3 +116,4 @@ function showAdminMessageDialog(message, messageDocRef) {
         }
     });
 }
+

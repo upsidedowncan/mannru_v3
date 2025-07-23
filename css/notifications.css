@@ -1,0 +1,30 @@
+.notification-container {
+    position: fixed;
+    top: 20px;
+    left: -350px; 
+    width: 300px;
+    z-index: 1000;
+    transition: left 0.5s ease-in-out;
+}
+
+.notification-container.show {
+    left: 20px;
+}
+
+.notification {
+    background-color: #2c3e50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.notification-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.notification-body {
+    font-size: 0.9em;
+}
