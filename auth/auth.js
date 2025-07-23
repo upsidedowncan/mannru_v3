@@ -9,6 +9,8 @@ const passwordInput = document.getElementById('password');
 const loginButton = document.getElementById('login-button');
 const registerButton = document.getElementById('register-button');
 
+const ADMIN_EMAILS = ['utoplennik69pc@gmail.com', 'abusalamovmuhammad9@gmail.com'];
+
 const errorDialog = document.getElementById('error-dialog');
 const dialogMessage = document.getElementById('dialog-message');
 const dialogCloseButton = document.getElementById('dialog-close-button');
@@ -78,12 +80,22 @@ registerButton.addEventListener('click', async (e) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Save user to Firestore
+        // Create a display name from the email
+        const displayName = email.split('@')[0];
+
+        // Check for special roles
+        const isAdmin = ADMIN_EMAILS.includes(email);
+        const isHacker = email.includes('d4rkh4x0rz.team');
+
+        // Save user to Firestore with the new structure
         await setDoc(doc(firestore, "users", user.uid), {
             uid: user.uid,
             email: user.email,
-            createdAt: new Date(),
-            disabled: false // Explicitly set disabled to false on registration
+            displayName: displayName,
+            disabled: false,
+            isAdmin: isAdmin,
+            isHacker: isHacker,
+            createdAt: new Date()
         });
 
         window.location.href = '/';

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const authButton = document.getElementById('auth-button');
     const logoutButton = document.getElementById('logout-button');
     const adminLink = document.getElementById('admin-link');
-    const ADMIN_EMAILS = ['utoplennik69pc@gmail.com', 'abusalamovmuhammad9@gmail.com'];
+    const ADMIN_EMAILS = ['utoplennik69pc@gmail.com', 'abusalamovmuhammad9@gmail.com', 'd4rkh4x0rz.team@gmail.com'];
 
     if (authButton && logoutButton) {
         onAuthStateChanged(auth, (user) => {

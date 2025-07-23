@@ -2,7 +2,7 @@ import { auth, firestore } from './firebase.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const ADMIN_EMAILS = ['utoplennik69pc@gmail.com', 'abusalamovmuhammad9@gmail.com', 'd4rkh4x0rz.team@gmail.com'];
+const ADMIN_EMAILS = ['utoplennik69pc@gmail.com', 'abusalamovmuhammad9@gmail.com'];
 
 document.addEventListener('DOMContentLoaded', () => {
     const adminContent = document.getElementById('admin-content');
@@ -27,41 +27,27 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadUsers() {
     const usersListDiv = document.getElementById('users-list');
     usersListDiv.innerHTML = '<p>Загрузка пользователей...</p>';
-    const currentUser = auth.currentUser;
-
     try {
         const usersCollection = collection(firestore, 'users');
         const userSnapshot = await getDocs(usersCollection);
         let usersHTML = '<div class="list-group">';
-
         userSnapshot.forEach(doc => {
             const user = doc.data();
-            // Don't display the currently logged-in admin
-            if (user.uid === currentUser.uid) {
-                return;
-            }
-
-            const isAdmin = ADMIN_EMAILS.includes(user.email);
-            const userLabel = user.displayName || user.email;
-
-            usersHTML += `
-                <div class="list-group-item">
-                    <span>
-                        ${userLabel} (UID: ${user.uid}) - 
-                        Статус: ${user.disabled ? 'Отключен' : 'Активен'}
-                        ${isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
-                    </span>
-                    <div style="margin-top: 10px;">
-                        <button class="btn btn-secondary" data-action="message" data-uid="${user.uid}">Сообщение</button>
-                        <button class="btn btn-warning" data-action="toggle-disable" data-uid="${user.uid}" data-disabled="${user.disabled}" ${isAdmin ? 'disabled' : ''}>${user.disabled ? 'Включить' : 'Отключить'}</button>
-                        <button class="btn btn-danger" data-action="delete" data-uid="${user.uid}" ${isAdmin ? 'disabled' : ''}>Удалить</button>
-                        <button class="btn" data-action="cards" data-uid="${user.uid}">Карты</button>
-                        <button class="btn" data-action="items" data-uid="${user.uid}">Товары</button>
+            if (user && user.email && !ADMIN_EMAILS.includes(user.email)) {
+                usersHTML += `
+                    <div class="list-group-item">
+                        <span>${user.displayName || user.email} (UID: ${user.uid}) - Статус: ${user.disabled ? 'Отключен' : 'Активен'}</span>
+                        <div style="margin-top: 10px;">
+                            <button class="btn btn-secondary" data-action="message" data-uid="${user.uid}">Сообщение</button>
+                            <button class="btn btn-warning" data-action="toggle-disable" data-uid="${user.uid}" data-disabled="${user.disabled}">${user.disabled ? 'Включить' : 'Отключить'}</button>
+                            <button class="btn btn-danger" data-action="delete" data-uid="${user.uid}">Удалить</button>
+                            <button class="btn" data-action="cards" data-uid="${user.uid}">Карты</button>
+                            <button class="btn" data-action="items" data-uid="${user.uid}">Товары</button>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            }
         });
-
         usersHTML += '</div>';
         usersListDiv.innerHTML = usersHTML;
     } catch (error) {
@@ -92,7 +78,7 @@ function setupDialogs() {
     let currentUid = null;
 
     usersListDiv.addEventListener('click', async (e) => {
-        if (e.target.tagName === 'BUTTON' && !e.target.disabled) {
+        if (e.target.tagName === 'BUTTON') {
             const action = e.target.dataset.action;
             currentUid = e.target.dataset.uid;
 
@@ -119,10 +105,7 @@ function setupDialogs() {
     });
 
     // Close dialog listeners
-    cancelMessageButton.addEventListener('click', () => {
-        messageDialog.style.display = 'none';
-        messageText.value = '';
-    });
+    cancelMessageButton.addEventListener('click', () => messageDialog.style.display = 'none');
     closeCardsDialog.addEventListener('click', () => cardsDialog.style.display = 'none');
     closeItemsDialog.addEventListener('click', () => itemsDialog.style.display = 'none');
 
@@ -139,7 +122,6 @@ function setupDialogs() {
             messageDialog.style.display = 'none';
         } catch (error) {
             console.error("Error sending message:", error);
-            alert('Ошибка при отправке сообщения.');
         }
     });
 }
@@ -158,16 +140,12 @@ async function toggleDisableUser(uid, isDisabled) {
 async function deleteUser(uid) {
     if (!confirm('Вы уверены, что хотите удалить этого пользователя и все его данные? Это действие необратимо.')) return;
     try {
-        // This is a simplified deletion. In a real app, you'd use a Cloud Function
-        // to handle this properly on the backend to delete auth user and all associated data.
         await deleteDoc(doc(firestore, 'users', uid));
 
-        // Delete associated cards
         const cardsQuery = query(collection(firestore, 'cards'), where('userId', '==', uid));
         const cardsSnapshot = await getDocs(cardsQuery);
         cardsSnapshot.forEach(async (cardDoc) => await deleteDoc(cardDoc.ref));
 
-        // Delete associated items
         const itemsQuery = query(collection(firestore, 'items'), where('sellerId', '==', uid));
         const itemsSnapshot = await getDocs(itemsQuery);
         itemsSnapshot.forEach(async (itemDoc) => await deleteDoc(itemDoc.ref));
@@ -243,7 +221,6 @@ async function loadUserItems(uid) {
 }
 
 
-// Event delegation for dynamically created content in dialogs
 document.addEventListener('click', async (e) => {
     if (!e.target.dataset.action) return;
 
