@@ -25,91 +25,121 @@ onAuthStateChanged(auth, async (user) => {
             itemPriceEl.textContent = itemData.price;
             itemDescriptionEl.textContent = itemData.description;
 
-            // Load user's cards
-            const cardsQuery = query(collection(firestore, "cards"), where("userId", "==", user.uid));
-            const cardsSnapshot = await getDocs(cardsQuery);
-            cardsSnapshot.forEach(cardDoc => {
-                const card = cardDoc.data();
-                const option = document.createElement('option');
-                option.value = cardDoc.id;
-                option.textContent = `Карта **** ${card.cardNumber.slice(-4)} (Баланс: ${card.balance} МР)`;
-                paymentCardSelect.appendChild(option);
-            });
+            // Check if the current user is the seller
+            if (itemData.sellerId === user.uid) {
+                buyNowButton.textContent = 'Это ваш товар';
+                buyNowButton.disabled = true;
+                contactSellerButton.style.display = 'none';
+                paymentCardSelect.style.display = 'none';
+            } else {
+                // If not the seller, load the user's cards for payment
+                const cardsQuery = query(collection(firestore, "cards"), where("userId", "==", user.uid));
+                const cardsSnapshot = await getDocs(cardsQuery);
+                cardsSnapshot.forEach(cardDoc => {
+                    const card = cardDoc.data();
+                    const option = document.createElement('option');
+                    option.value = cardDoc.id;
+                    option.textContent = `Карта **** ${card.cardNumber.slice(-4)} (Баланс: ${card.balance} МР)`;
+                    paymentCardSelect.appendChild(option);
+                });
 
-            buyNowButton.addEventListener('click', async () => {
-                const selectedBuyerCardId = paymentCardSelect.value;
-                if (!selectedBuyerCardId) {
-                    alert('Пожалуйста, выберите карту для оплаты.');
-                    return;
-                }
+                // Add event listener for the buy button
+                buyNowButton.addEventListener('click', async () => {
+                    const selectedBuyerCardId = paymentCardSelect.value;
+                    if (!selectedBuyerCardId) {
+                        alert('Пожалуйста, выберите карту для оплаты.');
+                        return;
+                    }
 
-                try {
-                    await runTransaction(firestore, async (transaction) => {
-                        const itemRef = doc(firestore, "items", itemId);
-                        const buyerCardRef = doc(firestore, "cards", selectedBuyerCardId);
+                    try {
+                        await runTransaction(firestore, async (transaction) => {
+                            const itemRef = doc(firestore, "items", itemId);
+                            const buyerCardRef = doc(firestore, "cards", selectedBuyerCardId);
 
-                        // 1. Read all necessary documents first.
-                        const itemSnap = await transaction.get(itemRef);
-                        if (!itemSnap.exists()) {
-                            throw "Товар больше не доступен.";
-                        }
-                        
-                        const itemData = itemSnap.data();
-                        const sellerCardRef = doc(firestore, "cards", itemData.payoutCardId);
+                            const itemSnap = await transaction.get(itemRef);
+                            if (!itemSnap.exists()) {
+                                throw "Товар больше не доступен.";
+                            }
 
-                        const buyerCardSnap = await transaction.get(buyerCardRef);
-                        const sellerCardSnap = await transaction.get(sellerCardRef);
+                            const itemData = itemSnap.data();
+                            const sellerCardRef = doc(firestore, "cards", itemData.payoutCardId);
+                            const buyerCardSnap = await transaction.get(buyerCardRef);
+                            const sellerCardSnap = await transaction.get(sellerCardRef);
 
-                        // 2. Validate the data.
-                        if (!buyerCardSnap.exists() || buyerCardSnap.data().balance < itemData.price) {
-                            throw "Недостаточно средств на выбранной карте.";
-                        }
-                        if (!sellerCardSnap.exists()) {
-                            throw "Карта продавца не найдена.";
-                        }
+                            if (!buyerCardSnap.exists() || buyerCardSnap.data().balance < itemData.price) {
+                                throw "Недостаточно средств на выбранной карте.";
+                            }
+                            if (!sellerCardSnap.exists()) {
+                                throw "Карта продавца не найдена.";
+                            }
 
-                        // 3. Perform all write operations.
-                        const commission = itemData.price * 0.05;
-                        const sellerGets = itemData.price - commission;
-                        const newBuyerBalance = buyerCardSnap.data().balance - itemData.price;
-                        const newSellerBalance = sellerCardSnap.data().balance + sellerGets;
+                            const commission = itemData.price * 0.05;
+                            const sellerGets = itemData.price - commission;
+                            const newBuyerBalance = buyerCardSnap.data().balance - itemData.price;
+                                                    const newSellerBalance = sellerCardSnap.data().balance + sellerGets;
                         
                         transaction.update(buyerCardRef, { balance: newBuyerBalance });
                         transaction.update(sellerCardRef, { balance: newSellerBalance });
-                        transaction.delete(itemRef);
-                    });
+                        
+                            const timestamp = new Date();
+                            const buyerTransactionRef = doc(collection(firestore, "transactions"));
+                            transaction.set(buyerTransactionRef, {
+                            userId: user.uid,
+                            type: 'purchase',
+                            itemId: itemId,
+                            itemName: itemData.name,
+                            amount: itemData.price,
+                                timestamp: timestamp
+                        });
 
-                    alert('Покупка совершена успешно!');
-                    window.location.href = '/market.html';
-                } catch (error) {
-                    console.error("Transaction failed: ", error);
-                    alert(`Ошибка при покупке: ${error}`);
-                }
-            });
+                            const sellerTransactionRef = doc(collection(firestore, "transactions"));
+                            transaction.set(sellerTransactionRef, {
+                                userId: itemData.sellerId,
+                                type: 'sale',
+                            itemId: itemId,
+                                itemName: itemData.name,
+                                amount: itemData.price,
+                                timestamp: timestamp
+                        });
 
-            contactSellerButton.addEventListener('click', async () => {
-                const chatQuery = query(
-                    collection(firestore, 'chats'),
-                    where('itemId', '==', itemId),
-                    where('participants', 'array-contains', user.uid)
-                );
-                const querySnapshot = await getDocs(chatQuery);
-                
-                if (querySnapshot.empty) {
-                    const newChat = await addDoc(collection(firestore, 'chats'), {
-                        itemId: itemId,
-                        participants: [user.uid, itemData.sellerId]
-                    });
-                    window.location.href = `/chat.html?id=${newChat.id}`;
-                } else {
-                    window.location.href = `/chat.html?id=${querySnapshot.docs[0].id}`;
-                }
-            });
+                            transaction.delete(itemRef);
+                });
 
+                        alert('Покупка совершена успешно!');
+            window.location.href = '/market.html';
+                    } catch (error) {
+                        console.error("Transaction failed: ", error);
+                        alert(`Ошибка при покупке: ${error}`);
+        }
+});
+
+                // Add event listener for the contact seller button
+                contactSellerButton.addEventListener('click', async () => {
+                    const chatQuery = query(
+                        collection(firestore, 'chats'),
+                        where('itemId', '==', itemId),
+                        where('participants', 'array-contains', user.uid)
+                    );
+                    const querySnapshot = await getDocs(chatQuery);
+
+                    if (querySnapshot.empty) {
+                        const newChat = await addDoc(collection(firestore, 'chats'), {
+                            itemId: itemId,
+                            participants: [user.uid, itemData.sellerId]
+                        });
+                        window.location.href = `/chat.html?id=${newChat.id}`;
+                    } else {
+                        window.location.href = `/chat.html?id=${querySnapshot.docs[0].id}`;
+                    }
+                });
+            }
         } else {
+            // If item doesn't exist, redirect to market
             window.location.href = '/market.html';
         }
     } else if (!user) {
+        // If user is not logged in, redirect to auth page
         window.location.href = '/auth/auth.html';
     }
-}); 
+});
+

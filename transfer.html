@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Перевод средств - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <link rel="stylesheet" href="css/gradient.css">
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <h2>Перевод средств</h2>
+            <div class="form-group">
+                <label for="from-card" class="form-label">С какой карты</label>
+                <select id="from-card" class="input"></select>
+            </div>
+            <div class="form-group">
+                <label for="to-card" class="form-label">На какую карту</label>
+                <select id="to-card" class="input"></select>
+            </div>
+            <div class="form-group">
+                <label for="amount" class="form-label">Сумма</label>
+                <input type="number" id="amount" class="input" placeholder="Введите сумму">
+            </div>
+            <button id="transfer-button" class="btn btn-primary">Перевести</button>
+        </section>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="transfer.js"></script>
+</body>
+</html>

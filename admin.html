@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель администратора - Банк Маннру</title>
     <link rel="stylesheet" href="ui-kit.css">
-    <link rel="stylesheet" href="css/notifications.css">
+    
     <style>
         .admin-badge {
             background-color: #007bff;
@@ -49,9 +49,14 @@
             <p>Добро пожаловать, администратор!</p>
 
             <section class="ui-section">
+                <h3>Инструменты</h3>
+                <a href="/firestore-explorer.html" class="btn">Проводник Firestore</a>
+            </section>
+
+            <section class="ui-section">
                 <h3>Пользователи</h3>
                 <div id="users-list"></div>
-            </section>
+        </section>
         </section>
 
         <section id="auth-gate">

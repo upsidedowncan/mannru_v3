@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проводник Firestore - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <style>
+        .explorer-container {
+            display: flex;
+            gap: 1rem;
+            height: calc(100vh - 200px);
+        }
+        .tree-view {
+            width: 300px;
+            border-right: 1px solid #ddd;
+            padding-right: 1rem;
+            overflow-y: auto;
+        }
+        .json-editor {
+            flex-grow: 1;
+        }
+        .tree-item {
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+        .tree-item:hover {
+            background-color: #f0f0f0;
+        }
+        .tree-item.selected {
+            background-color: #007bff;
+            color: white;
+        }
+        textarea {
+            width: 100%;
+            height: 100%;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section" id="admin-gate" style="display: none;">
+            <h2>Проводник Firestore</h2>
+            <div class="explorer-container">
+                <div class="tree-view" id="tree-view"></div>
+                <div class="json-editor">
+                    <textarea id="json-content" placeholder="Выберите документ для просмотра..."></textarea>
+                    <button id="save-button" class="btn btn-primary" style="display: none;">Сохранить изменения</button>
+                </div>
+            </div>
+        </section>
+        <section id="auth-gate-message">
+            <p>Для доступа к этой странице необходимо войти в систему как администратор.</p>
+        </section>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="firestore-explorer.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История транзакций - Банк Маннру</title>
+    <link rel="stylesheet" href="ui-kit.css">
+    <link rel="stylesheet" href="css/gradient.css">
+    <style>
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .transaction-icon {
+            font-size: 2rem;
+            margin-right: 1.5rem;
+            line-height: 1;
+        }
+        .arrow-up {
+            color: #28a745; /* Green */
+        }
+        .arrow-down {
+            color: #dc3545; /* Red */
+        }
+        .transaction-details {
+            flex-grow: 1;
+        }
+        .transaction-description {
+            margin: 0;
+            font-weight: 500;
+        }
+        .transaction-date {
+            margin: 0;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 576px) {
+            .transaction-item {
+                flex-wrap: wrap;
+                row-gap: 0.5rem;
+            }
+            .transaction-icon {
+                font-size: 1.5rem;
+                margin-right: 1rem;
+            }
+            .transaction-details {
+                flex-basis: 0;
+                flex-grow: 1;
+            }
+            .transaction-amount {
+                flex-basis: 100%;
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header"></header>
+
+    <main class="ui-kit">
+        <section class="ui-section">
+            <h2>История транзакций</h2>
+            <div id="transactions-container">
+                <!-- Transactions will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="components/navbar.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="history.js"></script>
+</body>
